@@ -12,7 +12,7 @@ const Cart = () => {
 
   const handleCheckout = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/payment/create-checkout-session", {
+      const res = await axios.post("http://shopsmart-backend-v25b.onrender.com/api/payment/create-checkout-session", {
         cartItems: cart,
       });
       window.location.href = res.data.url;
