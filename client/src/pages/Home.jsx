@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
+import SkeletonProductCard from "../components/SkeletonProductCard";
 import { fetchProducts } from "../api/api";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import Masonry from "react-masonry-css";
-import "../App.css"; 
+import "../App.css";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     fetchProducts()
-      .then((res) => setProducts(res.data))
+      .then((res) => {
+        setProducts(res.data);
+        setLoading(false);
+      })
       .catch((err) => {
         console.error(err);
         toast.error("Failed to load products.");
+        setLoading(false);
       });
   }, []);
 
@@ -46,9 +52,9 @@ const Home = () => {
         className="flex gap-6"
         columnClassName="masonry-column"
       >
-        {items.map((product) => (
-          <ProductCard key={product._id} product={product} />
-        ))}
+        {loading
+          ? Array.from({ length: 3 }).map((_, i) => <SkeletonProductCard key={i} />)
+          : items.map((product) => <ProductCard key={product._id} product={product} />)}
       </Masonry>
     </motion.div>
   );
@@ -85,22 +91,22 @@ const Home = () => {
       </motion.div>
 
       {/* Product Sections */}
-      {featured.length > 0 && (
-        <motion.div
-          id="featured" 
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          className={`mb-16 p-6 rounded-lg shadow-md bg-[#1a1f2e]/80 backdrop-blur-md border-l-4 border-cyan-400`}
-        >
-          <h2 className="text-3xl font-semibold mb-6 text-cyan-300">Featured Picks</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {featured.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
-          </div>
-        </motion.div>
-      )}
+      <motion.div
+        id="featured"
+        variants={sectionVariants}
+        initial="hidden"
+        animate="visible"
+        className={`mb-16 p-6 rounded-lg shadow-md bg-[#1a1f2e]/80 backdrop-blur-md border-l-4 border-cyan-400`}
+      >
+        <h2 className="text-3xl font-semibold mb-6 text-cyan-300">Featured Picks</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {loading
+            ? Array.from({ length: 3 }).map((_, i) => <SkeletonProductCard key={i} />)
+            : featured.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+        </div>
+      </motion.div>
 
       {hotDeals.length > 0 && (
         <Category
