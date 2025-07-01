@@ -5,6 +5,7 @@ import { useCart } from "../context/CartContext";
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const increase = () => setQuantity((q) => Math.min(q + 1, 10));
   const decrease = () => setQuantity((q) => Math.max(q - 1, 1));
@@ -18,11 +19,17 @@ const ProductCard = ({ product }) => {
       className="relative group bg-card-bg/70 backdrop-blur-md text-white rounded-2xl overflow-hidden shadow-lg border border-white/10"
     >
       {/* Image Section */}
-      <div className="bg-white h-48 p-3 flex justify-center items-center">
+      <div className="bg-white h-48 p-3 flex justify-center items-center relative">
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gray-300 shimmer rounded" />
+        )}
         <img
           src={product.image}
           alt={product.name}
-          className="h-full object-contain transition-transform duration-300 group-hover:scale-105"
+          onLoad={() => setImageLoaded(true)}
+          className={`h-full object-contain transition-opacity duration-500 ${
+            imageLoaded ? "opacity-100" : "opacity-0"
+          }`}
         />
       </div>
 

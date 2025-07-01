@@ -51,3 +51,24 @@ html {
   flex-direction: column;
   gap: 1.5rem;
 }
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    to right,
+    #2e2e2e 0%,
+    #444 20%,
+    #2e2e2e 40%,
+    #2e2e2e 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite linear;
+}
